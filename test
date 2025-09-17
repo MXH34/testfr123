@@ -7,71 +7,42 @@ local Window = WindUI:CreateWindow({
     Folder = "Ringtrash"
 })
 
--- blacklist check
-local blacklisted = {["swift"]=true,["volcano"]=true,["potassium"]=true,["bunni"]=true}
-
-function identifyexecutor()
-    local probes = {}
-    local ok, res
-    if type(getexecutor) == "function" then ok, res = pcall(getexecutor) if ok and res then table.insert(probes, tostring(res)) end end
-    if type(getexploit) == "function" then ok, res = pcall(getexploit) if ok and res then table.insert(probes, tostring(res)) end end
-    for k, v in pairs(_G) do
-        table.insert(probes, tostring(k))
-        if type(v) == "string" then table.insert(probes, tostring(v)) end
-    end
-    for _, p in ipairs(probes) do
-        local s = tostring(p):lower()
-        for name, _ in pairs(blacklisted) do
-            if string.find(s, name, 1, true) then
-                pcall(function() game.Players.LocalPlayer:Kick("Blacklisted Executor") end)
-                return name
-            end
-        end
-    end
-    return nil
-end
-
-identifyexecutor()
-
--- customize the WindUI open button
-do
-    local btn = Window.OpenButton
-    if btn then
-        btn.Text = "Open RINGTA SCRIPTS"
-        btn.Size = UDim2.new(0, 220, 0, 40)
-        btn.TextScaled = true
-        btn.AutoButtonColor = true
-
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(0, 8)
-        corner.Parent = btn
-
-        local stroke = Instance.new("UIStroke")
-        stroke.Thickness = 2
-        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        stroke.Color = Color3.fromRGB(255, 255, 255)
-        stroke.Parent = btn
-
-        local gradient = Instance.new("UIGradient")
-        gradient.Color = ColorSequence.new{
-            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 255)),
-            ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 255, 255))
-        }
-        gradient.Parent = stroke
-    end
-end
-
--- example tab + section + button
-local Tab = Window:CreateTab({
-    Title = "Main",
-    Icon = "home"
+-- RLGL TAB
+local RLGLTab = Window:CreateTab({
+    Title = "RLGL",
+    Icon = "siren"
 })
 
-local Section = Tab:CreateSection("General")
+-- RLGL Sections
+local DalgonaSection = RLGLTab:CreateSection({Title = "Dalgona"})
+local TugOfWarSection = RLGLTab:CreateSection({Title = "Tug of War"})
+local HideAndSeekSection = RLGLTab:CreateSection({Title = "Hide and Seek"})
+local JumpGlassSection = RLGLTab:CreateSection({Title = "Jump Rope / Glass Bridge"})
+local MiscSection = RLGLTab:CreateSection({Title = "Misc Features"})
+local CombatSection = RLGLTab:CreateSection({Title = "Combat"})
 
-Section:CreateButton({
-    Title = "Test Button",
-    Callback = function()
-        print("clicked")
+-- Finish RLGL Button
+RLGLTab:Button({
+    Text = "Finish RLGL",
+    Func = function()
+        if not isGame("RedLightGreenLight") then
+            WindUI:Notify({
+                Title = "Red Light Green Light",
+                Content = "Wait for game to start!",
+                Duration = 4,
+                Icon = "alert"
+            })
+            return
+        end
+        local root = lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = CFrame.new(-215.04, 1023.05, 142.77)
+            WindUI:Notify({
+                Title = "Teleported!",
+                Content = "You were moved to the Left House!",
+                Duration = 3,
+                Icon = "star"
+            })
+        end
     end
 })
